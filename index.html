@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jiří Vyhnálek – Automatizace a AI pro malé firmy</title>
+<meta name="description" content="Pomáhám malým firmám ušetřit čas a peníze pomocí automatizace a umělé inteligence. Srozumitelně, za pevnou cenu, bez IT řečí.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@500;700&display=swap&subset=latin-ext" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f3ede2;
+    --paper-2: #ebe3d3;
+    --ink: #1c1a17;
+    --ink-soft: #57524a;
+    --red: #d9472b;
+    --green: #2f6b4f;
+    --yellow: #f6d860;
+    --line: #cfc5b3;
+    --serif: "Fraunces", Georgia, serif;
+    --sans: "IBM Plex Sans", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+    --hand: "Caveat", cursive;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    overflow-x: clip;
+    background: var(--paper);
+    color: var(--ink);
+    font: 18px/1.6 var(--sans);
+    /* subtle paper grain */
+    background-image: radial-gradient(rgba(28,26,23,.035) 1px, transparent 1px);
+    background-size: 4px 4px;
+  }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  h1, h2, h3 { font-family: var(--serif); font-weight: 800; line-height: 1.05; letter-spacing: -.02em; margin: 0; }
+  h2 { font-size: clamp(2rem, 4.5vw, 3.2rem); margin-bottom: 1.2rem; }
+  .eyebrow {
+    font: 500 .8rem/1 var(--mono); text-transform: uppercase; letter-spacing: .14em;
+    color: var(--red); display: inline-block; margin-bottom: 1rem;
+  }
+  .hand { font-family: var(--hand); font-weight: 700; }
+  section { padding: 96px 0; border-top: 1.5px solid var(--ink); }
+
+  /* buttons */
+  .btn {
+    display: inline-block; text-decoration: none; cursor: pointer;
+    font: 600 1rem/1 var(--sans);
+    background: var(--ink); color: var(--paper);
+    padding: 18px 26px; border: 2px solid var(--ink);
+    box-shadow: 5px 5px 0 var(--red);
+    transition: transform .15s, box-shadow .15s;
+  }
+  .btn:hover { transform: translate(-2px,-2px); box-shadow: 7px 7px 0 var(--red); }
+  .btn:active { transform: translate(3px,3px); box-shadow: 2px 2px 0 var(--red); }
+
+  /* nav */
+  nav { padding: 22px 0; }
+  nav .wrap { display: flex; justify-content: space-between; align-items: center; }
+  .logo { font: 800 1.6rem/1 var(--serif); text-decoration: none; letter-spacing: -.03em; }
+  .logo span { color: var(--red); }
+  nav .link { font: 500 .95rem var(--sans); text-decoration: none; border-bottom: 2px solid var(--red); padding-bottom: 2px; }
+
+  /* hero */
+  .hero { padding: 56px 0 104px; border-top: none; }
+  .hero .wrap { display: grid; grid-template-columns: 1.25fr .9fr; gap: 64px; align-items: center; }
+  .hero h1 { font-size: clamp(2.5rem, 5.6vw, 4.4rem); }
+  .strike { position: relative; display: inline-block; color: var(--ink-soft); }
+  .strike svg { position: absolute; left: -4%; top: 38%; width: 108%; height: 40%; overflow: visible; }
+  .strike path { fill: none; stroke: var(--red); stroke-width: 7; stroke-linecap: round;
+    stroke-dasharray: 600; stroke-dashoffset: 600; animation: draw .7s .4s ease-out forwards; }
+  .hero h1 em { font-style: italic; font-weight: 600; }
+  .hero .lead { font-size: 1.25rem; color: var(--ink-soft); max-width: 34ch; margin: 1.6rem 0 2.2rem; }
+  .hero .note-under { font-family: var(--hand); font-size: 1.4rem; color: var(--ink-soft); margin-left: 18px; }
+
+  /* to-do sticky note */
+  .todo {
+    background: var(--yellow); padding: 34px 30px 30px; transform: rotate(2.2deg);
+    box-shadow: 0 1px 0 rgba(0,0,0,.08), 10px 14px 0 rgba(28,26,23,.12);
+    position: relative;
+  }
+  .todo::before { /* tape */
+    content: ""; position: absolute; top: -14px; left: 50%; width: 110px; height: 28px;
+    transform: translateX(-50%) rotate(-3deg); background: rgba(255,255,255,.55);
+    border: 1px solid rgba(0,0,0,.05);
+  }
+  .todo h3 { font: 700 2rem/1 var(--hand); margin-bottom: 12px; }
+  .todo ul { list-style: none; margin: 0; padding: 0; }
+  .todo li { font: 500 1.55rem/1.35 var(--hand); padding: 6px 0 6px 36px; position: relative; border-bottom: 1px dashed rgba(28,26,23,.25); }
+  .todo li::before { content: ""; position: absolute; left: 2px; top: 13px; width: 18px; height: 18px; border: 2px solid var(--ink); border-radius: 3px; }
+  .todo li::after { content: "✓"; position: absolute; left: 3px; top: 0; font: 700 1.9rem var(--hand); color: var(--green); opacity: 0; }
+  .todo li span { background: linear-gradient(var(--ink), var(--ink)) no-repeat 0 55% / 0 2px; }
+  .todo li:nth-child(1) { --d: 1.2s; } .todo li:nth-child(2) { --d: 1.9s; }
+  .todo li:nth-child(3) { --d: 2.6s; } .todo li:nth-child(4) { --d: 3.3s; }
+  .todo li::after { animation: pop .3s var(--d) forwards; }
+  .todo li span { animation: cross .5s var(--d) forwards; }
+  .todo .stamp {
+    position: absolute; right: -18px; bottom: -26px; transform: rotate(-12deg);
+    font: 800 1.1rem/1 var(--mono); letter-spacing: .1em; color: var(--red);
+    border: 3px solid var(--red); padding: 10px 14px; background: var(--paper);
+    opacity: 0; animation: stamp .35s 4s cubic-bezier(.3,1.6,.6,1) forwards;
+  }
+
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @keyframes pop { to { opacity: 1; } }
+  @keyframes cross { to { background-size: 100% 2px; color: var(--ink-soft); } }
+  @keyframes stamp { from { opacity: 0; transform: rotate(-12deg) scale(2); } to { opacity: 1; transform: rotate(-12deg) scale(1); } }
+
+  /* problems */
+  .problems .wrap { display: grid; grid-template-columns: .8fr 1.2fr; gap: 64px; }
+  .problems ol { list-style: none; counter-reset: p; margin: 0; padding: 0; }
+  .problems li {
+    counter-increment: p; display: grid; grid-template-columns: 56px 1fr; gap: 12px;
+    padding: 22px 0; border-bottom: 1px solid var(--line); font-size: 1.2rem;
+  }
+  .problems li::before { content: counter(p, decimal-leading-zero); font: 500 .9rem/2.2 var(--mono); color: var(--red); }
+  .problems .aside { font-family: var(--hand); font-size: 1.6rem; color: var(--ink-soft); margin-top: 1.5rem; line-height: 1.2; }
+
+  /* services – ledger grid */
+  .services { background: var(--ink); color: var(--paper); border-top: none; }
+  .services .eyebrow { color: var(--yellow); }
+  .grid4 { display: grid; grid-template-columns: repeat(2, 1fr); border-top: 1px solid #4a463f; border-left: 1px solid #4a463f; margin-top: 2.5rem; }
+  .grid4 > div { padding: 40px 36px; border-right: 1px solid #4a463f; border-bottom: 1px solid #4a463f; }
+  .grid4 .num { font: 800 3.4rem/1 var(--serif); color: var(--yellow); display: block; margin-bottom: 18px; }
+  .grid4 h3 { font-size: 1.6rem; margin-bottom: .6rem; }
+  .grid4 p { color: #c9c1b2; margin: 0; }
+
+  /* examples – index cards */
+  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 2.5rem; }
+  .card {
+    background: #fffdf8; border: 1.5px solid var(--ink); padding: 26px 22px 22px;
+    background-image: linear-gradient(transparent 39px, #e7b3a8 39px, #e7b3a8 40px, transparent 40px),
+                      repeating-linear-gradient(transparent 0 27px, #d7e3ec 27px 28px);
+    background-position: 0 0, 0 40px;
+    transition: transform .2s;
+  }
+  .card:nth-child(odd) { transform: rotate(-1deg); } .card:nth-child(even) { transform: rotate(1.2deg); }
+  .card:hover { transform: rotate(0) translateY(-4px); }
+  .card .who { font: 500 .78rem/1 var(--mono); text-transform: uppercase; letter-spacing: .12em; color: var(--red); }
+  .card p { margin: 22px 0 16px; font-size: 1rem; line-height: 28px; }
+  .card .result { font: 700 1.5rem/1.1 var(--hand); color: var(--green); }
+
+  /* process */
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 2.5rem; position: relative; }
+  .steps::before { content: ""; position: absolute; top: 27px; left: 28px; right: 28px; border-top: 2px dashed var(--ink); }
+  .step { padding-right: 24px; position: relative; }
+  .step .dot {
+    width: 56px; height: 56px; border-radius: 50%; background: var(--paper); border: 2px solid var(--ink);
+    display: grid; place-items: center; font: 800 1.4rem var(--serif); margin-bottom: 22px; position: relative;
+  }
+  .step:first-child .dot { background: var(--red); color: var(--paper); border-color: var(--red); }
+  .step h3 { font-size: 1.35rem; margin-bottom: .5rem; }
+  .step p { color: var(--ink-soft); margin: 0; font-size: 1rem; }
+
+  /* why + pricing */
+  .why .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: 72px; align-items: start; }
+  .why ul { list-style: none; padding: 0; margin: 0; }
+  .why li { padding: 18px 0 18px 40px; position: relative; border-bottom: 1px solid var(--line); }
+  .why li::before { content: "→"; position: absolute; left: 0; top: 16px; font: 600 1.3rem var(--mono); color: var(--red); }
+  .why li:first-child { font-family: var(--serif); font-size: 1.45rem; line-height: 1.3; font-weight: 600; }
+
+  .receipt {
+    background: #fffefb; font-family: var(--mono); font-size: .95rem; padding: 34px 30px 46px;
+    box-shadow: 0 18px 30px -18px rgba(0,0,0,.35); transform: rotate(-1.5deg); position: relative;
+    --zig: linear-gradient(-45deg, transparent 8px, #fffefb 0), linear-gradient(45deg, transparent 8px, #fffefb 0);
+  }
+  .receipt::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -12px; height: 12px;
+    background: linear-gradient(-45deg, transparent 8px, #fffefb 0) 0 0 / 16px 12px repeat-x,
+                linear-gradient(45deg, transparent 8px, #fffefb 0) 0 0 / 16px 12px repeat-x;
+  }
+  .receipt .head { text-align: center; border-bottom: 1.5px dashed var(--ink); padding-bottom: 16px; margin-bottom: 14px; }
+  .receipt .head strong { font: 800 1.6rem/1 var(--serif); display: block; margin-bottom: 6px; }
+  .receipt .row { display: flex; gap: 8px; padding: 10px 0; }
+  .receipt .row span:nth-child(2) { flex: 1; border-bottom: 1.5px dotted var(--ink-soft); transform: translateY(-6px); }
+  .receipt .row b { font-weight: 500; white-space: nowrap; }
+  .receipt .total { border-top: 1.5px dashed var(--ink); margin-top: 14px; padding-top: 16px; text-align: center; color: var(--ink-soft); font-size: .85rem; }
+  .receipt .total .hand { font-size: 1.5rem; color: var(--red); display: block; margin-top: 6px; }
+
+  /* FAQ */
+  .faq details { border-bottom: 1.5px solid var(--ink); padding: 22px 0; }
+  .faq summary { cursor: pointer; list-style: none; font: 600 1.4rem/1.3 var(--serif); display: flex; justify-content: space-between; gap: 24px; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; font: 400 1.8rem/1 var(--mono); color: var(--red); transition: transform .2s; }
+  .faq details[open] summary::after { transform: rotate(45deg); }
+  .faq details p { margin: 14px 0 0; color: var(--ink-soft); max-width: 62ch; }
+
+  /* contact */
+  .contact { background: var(--red); color: var(--paper); border-top: none; }
+  .contact .wrap { display: grid; grid-template-columns: .9fr 1.1fr; gap: 64px; align-items: start; }
+  .contact h2 { font-size: clamp(2.4rem, 5vw, 4rem); }
+  .contact .eyebrow { color: var(--yellow); }
+  .contact .side p { font-size: 1.15rem; max-width: 32ch; }
+  .contact .side .hand { font-size: 1.8rem; display: block; margin-top: 2rem; transform: rotate(-3deg); }
+  form { background: var(--paper); color: var(--ink); padding: 36px; border: 2px solid var(--ink); box-shadow: 10px 10px 0 var(--ink); }
+  .field { margin-bottom: 20px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  label { display: block; font: 500 .78rem/1 var(--mono); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 8px; }
+  label small { text-transform: none; letter-spacing: 0; color: var(--ink-soft); }
+  input[type=text], input[type=email], input[type=tel], textarea {
+    width: 100%; font: 400 1.05rem var(--sans); color: var(--ink);
+    background: transparent; border: none; border-bottom: 2px solid var(--ink); padding: 8px 2px; border-radius: 0;
+  }
+  textarea { min-height: 110px; resize: vertical; border: 2px solid var(--ink); padding: 12px; background: #fffdf8; }
+  input:focus, textarea:focus { outline: none; border-color: var(--red); }
+  .consent { display: flex; gap: 12px; font-size: .88rem; color: var(--ink-soft); margin: 6px 0 24px; align-items: flex-start; }
+  .consent input { margin-top: 4px; accent-color: var(--red); width: 18px; height: 18px; flex: none; }
+  .hp { position: absolute; left: -9999px; }
+  .form-msg { margin-top: 18px; font-family: var(--hand); font-size: 1.5rem; color: var(--green); display: none; }
+
+  footer { padding: 32px 0 48px; font: 400 .85rem/1.6 var(--mono); color: var(--ink-soft); }
+  footer .wrap { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+
+  /* responsive */
+  @media (max-width: 900px) {
+    section { padding: 72px 0; }
+    .hero .wrap, .problems .wrap, .why .wrap, .contact .wrap { grid-template-columns: 1fr; gap: 48px; }
+    .todo { max-width: 420px; margin: 0 auto; }
+    .cards { grid-template-columns: 1fr 1fr; }
+    .steps { grid-template-columns: 1fr 1fr; row-gap: 40px; }
+    .steps::before { display: none; }
+  }
+  @media (max-width: 600px) {
+    body { font-size: 17px; }
+    .grid4, .cards, .steps, .row2 { grid-template-columns: 1fr; }
+    .grid4 > div { padding: 30px 24px; }
+    form { padding: 24px; box-shadow: 6px 6px 0 var(--ink); }
+    .hero .note-under { display: block; margin: 16px 0 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0s !important; animation-delay: 0s !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="#" class="logo">Jiří Vyhnálek<span>.</span></a>
+    <a href="#kontakt" class="link">Konzultace zdarma</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <h1>
+        Práci, kterou umí počítač,
+        <span class="strike">děláte vy.
+          <svg viewBox="0 0 300 40" preserveAspectRatio="none" aria-hidden="true"><path d="M4 26 C 60 14, 120 30, 180 18 S 270 12, 296 20"/></svg>
+        </span><br>
+        už dělat <em>nemusíte.</em>
+      </h1>
+      <p class="lead">Pomáhám malým firmám ušetřit čas a peníze pomocí automatizace a umělé inteligence. Srozumitelně, za pevnou cenu, bez IT řečí.</p>
+      <a href="#kontakt" class="btn">Domluvit 30 min konzultaci zdarma</a>
+      <span class="note-under">← nic to nestojí</span>
+    </div>
+
+    <div class="todo" aria-label="Ukázkový seznam úkolů">
+      <h3>Dnes musím…</h3>
+      <ul>
+        <li><span>přepsat faktury do tabulky</span></li>
+        <li><span>odpovědět na 12 stejných e-mailů</span></li>
+        <li><span>poslat klientům připomínky</span></li>
+        <li><span>dát dohromady čísla za měsíc</span></li>
+      </ul>
+      <div class="stamp">HOTOVO</div>
+    </div>
+  </div>
+</header>
+
+<section class="problems">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">Poznáváte se?</span>
+      <h2>Kde vám mizí čas</h2>
+      <p class="aside">Pokud jste kývli aspoň u jednoho bodu, máme o čem mluvit.</p>
+    </div>
+    <ol>
+      <li>Přepisujete data z e-mailů, faktur nebo formulářů ručně do tabulek.</li>
+      <li>Zákazníci píšou e-mailem nebo přes web mimo pracovní dobu a nikdo jim neodpoví.</li>
+      <li>Na stejné otázky odpovídáte pořád dokola.</li>
+      <li>Nevíte přesně, co vám vydělává a co ne, protože data jsou všude možně.</li>
+      <li>Objednávky, termíny a připomínky hlídáte v hlavě nebo na papírku.</li>
+    </ol>
+  </div>
+</section>
+
+<section class="services">
+  <div class="wrap">
+    <span class="eyebrow">Co umím</span>
+    <h2>Data mezi programy poputují sama.<br>Vy se věnujete zákazníkům.</h2>
+    <div class="grid4">
+      <div><span class="num">01</span><h3>Automatizace rutiny</h3><p>Co děláte ručně každý den, to nastavím tak, aby se dělo samo.</p></div>
+      <div><span class="num">02</span><h3>Zákazník nikdy nečeká</h3><p>Chytrý asistent odpoví, zapíše poptávku a domluví termín i v noci.</p></div>
+      <div><span class="num">03</span><h3>Přehled o firmě</h3><p>Čísla z účetnictví, e-shopu a tabulek na jednom místě, srozumitelně.</p></div>
+      <div><span class="num">04</span><h3>Méně papírů</h3><p>Faktury, smlouvy a dokumenty se samy roztřídí, přečtou a zapíšou.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="examples">
+  <div class="wrap">
+    <span class="eyebrow">Příklady z praxe</span>
+    <h2>Jak to může vypadat u vás</h2>
+    <!-- TODO: illustrative numbers – replace with real results after pilot projects -->
+    <div class="cards">
+      <div class="card"><span class="who">Účetní kancelář</span><p>Doklady od klientů se samy roztřídí a předvyplní.</p><span class="result">Úspora ~8 h týdně</span></div>
+      <div class="card"><span class="who">Instalatér</span><p>Poptávka z webu se sama zapíše a zákazník hned dostane odpověď s volnými termíny.</p><span class="result">Žádná ztracená zakázka</span></div>
+      <div class="card"><span class="who">Velkoobchod</span><p>Objednávky z e-mailů se samy přepíšou do tabulky a skladu.</p><span class="result">Žádné ruční přepisování</span></div>
+      <div class="card"><span class="who">E-shop</span><p>Odpovědi na časté dotazy zákazníků.</p><span class="result">Méně e-mailů, rychlejší reakce</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="process">
+  <div class="wrap">
+    <span class="eyebrow">Jak to probíhá</span>
+    <h2>Čtyři kroky, žádná překvapení</h2>
+    <div class="steps">
+      <div class="step"><div class="dot">1</div><h3>Konzultace zdarma</h3><p>30 minut. Řeknete mi, co vás zdržuje.</p></div>
+      <div class="step"><div class="dot">2</div><h3>Audit</h3><p>Projdu, jak firma funguje, a dostanete seznam možností s odhadem úspory.</p></div>
+      <div class="step"><div class="dot">3</div><h3>Řešení</h3><p>Nastavím ho za pevnou cenu, kterou znáte předem.</p></div>
+      <div class="step"><div class="dot">4</div><h3>Péče</h3><p>Hlídám, aby vše fungovalo, a když je potřeba, upravím to.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="why">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">Proč já</span>
+      <h2>Inženýr, ne prodejce</h2>
+      <ul>
+        <li>Pracuji přes 10 let jako profesionální vývojář softwaru, poslední 2 roky vyvíjím řešení s umělou inteligencí v nadnárodní korporaci.</li>
+        <li>Řeknu vám na rovinu, když AI nedává smysl. Někdy stačí obyčejná tabulka.</li>
+        <li>Vysvětlím to bez odborných pojmů a předám vám řešení tak, abyste ho zvládli používat sami.</li>
+        <li>Vaše data zůstávají v bezpečí a v souladu s GDPR.</li>
+      </ul>
+    </div>
+
+    <div class="receipt" aria-label="Ceník">
+      <div class="head"><strong>Ceník</strong>ceny bez DPH</div>
+      <div class="row"><span>Konzultace</span><span></span><b>zdarma</b></div>
+      <div class="row"><span>Audit</span><span></span><b>od 7 500 Kč</b></div>
+      <div class="row"><span>Řešení na míru</span><span></span><b>od 20 000 Kč</b></div>
+      <div class="row"><span>Měsíční péče</span><span></span><b>od 2 500 Kč/měs.</b></div>
+      <div class="total">Pevná cena vždy předem.<span class="hand">Žádné hodinovky navíc.</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="faq">
+  <div class="wrap">
+    <span class="eyebrow">Časté otázky</span>
+    <h2>Na co se lidé ptají</h2>
+    <details><summary>Potřebuji rozumět technice?</summary><p>Ne. Všechno vysvětlím a zaučím vás.</p></details>
+    <details><summary>Co když to nebude fungovat?</summary><p>Na začátku se domluvíme, co přesně má řešení umět. Pokud to neumí, neplatíte.</p></details>
+    <details><summary>Je to bezpečné?</summary><p>Ano. Používám ověřené nástroje a podepíšeme spolu smlouvu o zpracování dat.</p></details>
+  </div>
+</section>
+
+<section class="contact" id="kontakt">
+  <div class="wrap">
+    <div class="side">
+      <span class="eyebrow">Kontakt</span>
+      <h2>Kde vaše firma ztrácí čas?</h2>
+      <p>Napište mi pár vět o tom, co vás zdržuje. Ozvu se do dvou pracovních dnů a domluvíme si 30 minut zdarma.</p>
+      <span class="hand">Pojďme to zjistit →</span>
+    </div>
+
+    <form id="contact-form" action="https://api.web3forms.com/submit" method="POST" novalidate>
+      <input type="hidden" name="access_key" value="fe928d3a-2fc6-4271-8d87-ad0432e94bc8">
+      <input type="hidden" name="subject" value="Nová poptávka z webu">
+      <input type="hidden" name="from_name" value="Web – Jiří Vyhnálek">
+      <div class="row2">
+        <div class="field"><label for="name">Jméno</label><input type="text" id="name" name="name" required autocomplete="name"></div>
+        <div class="field"><label for="company">Firma <small>(nepovinné)</small></label><input type="text" id="company" name="company" autocomplete="organization"></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label for="email">E-mail</label><input type="email" id="email" name="email" required autocomplete="email"></div>
+        <div class="field"><label for="phone">Telefon <small>(nepovinné)</small></label><input type="tel" id="phone" name="phone" autocomplete="tel"></div>
+      </div>
+      <div class="field"><label for="message">Co vás zdržuje?</label><textarea id="message" name="message" required placeholder="Např. každý týden ručně přepisujeme objednávky z e-mailů do tabulky…"></textarea></div>
+      <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <label class="consent"><input type="checkbox" name="consent" required><span>Souhlasím se zpracováním osobních údajů za účelem odpovědi na mou poptávku.</span></label>
+      <button type="submit" class="btn">Odeslat</button>
+      <p class="form-msg" id="form-msg" role="status"></p>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <!-- TODO: add místo podnikání (business address) + "zapsán v živnostenském rejstříku" (required by §435 OZ) -->
+    <span>© 2026 Jiří Vyhnálek · IČO: 88733998</span>
+    <a href="mailto:jiri@vyhnalek.net">jiri@vyhnalek.net</a>
+  </div>
+</footer>
+
+<script>
+  const FORM_ENDPOINT = "https://api.web3forms.com/submit";
+  const CONTACT_EMAIL = "jiri@vyhnalek.net";
+
+  const form = document.getElementById("contact-form");
+  const msg = document.getElementById("form-msg");
+  const submitBtn = form.querySelector('button[type="submit"]');
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    const data = new FormData(form);
+    if (data.get("botcheck")) return;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Odesílám…";
+    msg.style.display = "block";
+    msg.style.color = "";
+    msg.textContent = "";
+    try {
+      const res = await fetch(FORM_ENDPOINT, { method: "POST", body: data, headers: { Accept: "application/json" } });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || !json.success) throw new Error(json.message || res.status);
+      form.reset();
+      msg.textContent = "Díky! Ozvu se do dvou pracovních dnů.";
+    } catch {
+      msg.style.color = "var(--red)";
+      msg.textContent = "Něco se pokazilo. Napište mi prosím přímo na " + CONTACT_EMAIL;
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Odeslat";
+    }
+  });
+</script>
+</body>
+</html>
